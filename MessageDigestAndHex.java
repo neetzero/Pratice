@@ -35,6 +35,7 @@ public class MessageDigestAndHex {
         String foo="123";
         System.out.println(MD5Message(foo));
         System.out.println(new String(ApacheEncodeHex(foo.getBytes())));
+		System.out.println(DigestUtils.md5Hex(foo.getBytes("UTF-8")));
     }
 
     public static String JavaDigestInputStream(File file) throws NoSuchAlgorithmException, IOException, FileNotFoundException {
