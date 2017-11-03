@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+
+  <title>Show Properties File</title>
+  <meta name="description" content="">
+  <meta name="author" content="et">
+  <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+  <![endif]-->
+  <style>
+	div {
+		margin : 20px;
+	}
+	#showPanel {
+		font-family : monospace;
+	}
+  </style>
+</head>
+
+<body>
+<div id='selFile'>
+<input type='file' id='fileInput'/><label for='file'>選擇properties檔案</label><button type='button' id='btn' onclick='clickBtn()'>確定</button>
+</div>
+
+<div id='showPanel'>
+</div>
+
+<div id='downloadLink'>
+</div>
+
+</body>
+<script>
+
+
+function clickBtn() {
+	var fileInput = document.getElementById('fileInput');
+	var fileDisplayArea = document.getElementById('showPanel');
+
+	
+	var file = fileInput.files[0];
+	
+	if(file.type === 'text/plain'){
+		var reader = new FileReader();
+
+		reader.onload = function(e) {
+			var text = reader.result;
+			
+			var lines = text.split('\n');
+			var re = /\\u([\d\w]{4})/gi;
+	
+			lines = lines.map((line)=>{
+				line = line.replace(re, (match, grp) => {
+					return String.fromCharCode(parseInt(grp, 16));
+				});
+				line = unescape(line);
+				//console.log(line);
+				return line;
+			});			
+			fileDisplayArea.innerText = lines.join('');
+		}
+
+		reader.readAsText(file);	
+	}else{
+		alert('檔案不支援');
+	}
+}
+
+//var arr = ['1','2','3','4']
+//createDownload("download.txt",arr);
+
+function createDownload(fileName, content) {
+	
+	var blob = new Blob([content]);
+	var link = document.createElement("a");
+	link.innerHTML = fileName;
+	link.download = fileName;
+	link.href = URL.createObjectURL(blob);
+	console.log(link.href);
+	document.getElementById("downloadLink").appendChild(link);
+}
+</script>
+</html>
