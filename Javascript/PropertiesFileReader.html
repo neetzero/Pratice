@@ -47,18 +47,13 @@ function clickBtn() {
 		reader.onload = function(e) {
 			var text = reader.result;
 			
-			var lines = text.split('\n');
+			var lines = text.split('\r\n');
 			var re = /\\u([\d\w]{4})/gi;
-	
-			lines = lines.map((line)=>{
-				line = line.replace(re, (match, grp) => {
-					return String.fromCharCode(parseInt(grp, 16));
-				});
-				line = unescape(line);
-				//console.log(line);
-				return line;
-			});			
-			fileDisplayArea.innerText = lines.join('');
+			text = text.replace(re, (match, grp) => {
+				return String.fromCharCode(parseInt(grp,16));
+			});
+			
+			fileDisplayArea.innerText = text;
 		}
 
 		reader.readAsText(file);	
