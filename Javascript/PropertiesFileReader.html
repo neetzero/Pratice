@@ -15,6 +15,7 @@
 	}
 	#showPanel {
 		font-family : monospace;
+		/*border : 1px solid black;*/
 	}
   </style>
 </head>
@@ -25,6 +26,8 @@
 </div>
 
 <div id='showPanel'>
+</div>
+<div id='editPanel'>
 </div>
 
 <div id='downloadLink'>
@@ -38,7 +41,6 @@ function clickBtn() {
 	var fileInput = document.getElementById('fileInput');
 	var fileDisplayArea = document.getElementById('showPanel');
 
-	
 	var file = fileInput.files[0];
 	
 	if(file.type === 'text/plain'){
@@ -47,8 +49,8 @@ function clickBtn() {
 		reader.onload = function(e) {
 			var text = reader.result;
 			var re = /\\u([\d\w]{4})/gi;
-			text = text.replace(re, (match, grp) => {
-				return String.fromCharCode(parseInt(grp,16));
+			text = text.replace(re, (match, p1) => {
+				return String.fromCharCode(parseInt(p1,16));
 			});
 			
 			fileDisplayArea.innerText = text;
