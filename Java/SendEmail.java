@@ -10,6 +10,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Properties;
 
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -21,6 +23,13 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 public class SendEmail {
+
+	private static String toMail = "";
+	private static String fromMail = "";
+	private static String bccMail = "";
+	private static String ccMail = "";
+	private static String replyToMail = "";
+	private static String file = "";
 
     private static Properties TlsProperties(){
         Properties props = new Properties();
@@ -73,10 +82,9 @@ public class SendEmail {
 		//取Session
 		//Session session = Session.getDefaultInstance(auerprop);
 		Session session = getSession(sslprops, username, password); //Google帳號密碼驗證
-
 	}
 
-	public void sendSimpleMail(Session sessio) {
+	public void sendSimpleMail(Session session) {
 		String toMail = "test1@gmail.com test2@gmail.com";
 		try {
 			MimeMessage msg = new MimeMessage(session);
@@ -103,7 +111,7 @@ public class SendEmail {
 	}
 
 	public void sendMailAttachment(Session session) throws Exception {
-		session.setDebug(debug); //開啟debug訊息
+		//session.setDebug(debug); //開啟debug訊息
 		
 		MimeMessage message = new MimeMessage(session);
 		message.setSubject("標題");
@@ -115,7 +123,8 @@ public class SendEmail {
 		//附加檔案
 		MimeBodyPart attachFilePart = new MimeBodyPart();
 		FileDataSource fds = new FileDataSource(file);//檔案路徑
-		attachFilePart.setDataHandler(new DataHandler(fds));
+		//attachFilePart.setDataHandler(new DataHandler(fds));
+		attachFilePart.attachFile(file);
 		attachFilePart.setFileName(fds.getName());
 
 		MimeMultipart mp = new MimeMultipart();
@@ -143,7 +152,7 @@ public class SendEmail {
 		     msg.setReplyTo(InternetAddress.parse(toMail, false));
 		     msg.setSubject("標題", "UTF-8");
 		     msg.setSentDate(new Date());
-		     msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail, false));
+		     msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toMail, false));
 		      
 	         MimeBodyPart messageBodyPart = new MimeBodyPart();
 			 messageBodyPart.setText("文字");
