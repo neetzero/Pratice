@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Format JSON</title>
+  <meta name="description" content="">
+  <meta name="author" content="et">
+  <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+  <![endif]-->
+  <style>
+div {
+	border: 1px solid gray;
+	width: 49%;
+	height: 640px;
+	margin: 1px 1px;
+	padding: 1px;
+	position: relative;
+	float: left;
+}
+textarea {
+	height: 100%;
+    width: 100%;
+   -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+    box-sizing: border-box;         /* Opera/IE 8+ */
+	resize: none;
+}
+  </style>
+</head>
+
+<body>
+<button type="button" onclick='doFormat()'>Format</button>
+<br>
+<div>
+	<textarea id='inputPanel'></textarea>
+</div>
+
+<div>
+	<textarea id='showPanel'></textarea>
+</div>
+</body>
+<script>
+function doFormat() {
+	var str = document.getElementById('inputPanel').value;
+	var result = '';
+	var obj = {};
+	try{
+		obj = JSON.parse(str);
+		result = JSON.stringify(obj, null, 2);
+	}catch(err) {
+		result = '非標準json格式';
+	}
+
+	document.getElementById('showPanel').value = result;
+}
+</script>
+</html>
