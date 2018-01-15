@@ -22,24 +22,26 @@ public class MessageDigestAndHex {
     
     public static void main(String[] args) throws Exception {
         // Provider List
+        
         for(Provider p : Security.getProviders()){
             System.out.println(p.getName() + " : " +p.getInfo());
         }
         
-        System.out.println(validateDigest("message1", "message2", ALGORITHM[3]));
+        //System.out.println(validateDigest("message1", "message2", ALGORITHM[3]));
         
-        File file = new File(filePath);
-        System.out.println(ApacheDigestUtilsFileChecksum(file));
-        System.out.println(JavaDigestInputStream(file));
-
+        File file = new File(filepath);
+        System.out.println("1 : " + ApacheDigestUtilsFileChecksum(file, ALGORITHM[2]));
+        System.out.println("2 : " + JavaDigestInputStream(file, ALGORITHM[2]));
+        
         String foo="123";
         System.out.println(MD5Message(foo));
         System.out.println(new String(ApacheEncodeHex(foo.getBytes())));
-		System.out.println(DigestUtils.md5Hex(foo.getBytes("UTF-8")));
+        System.out.println(DigestUtils.md5Hex(foo.getBytes("UTF-8")));
+        
     }
 
-    public static String JavaDigestInputStream(File file) throws NoSuchAlgorithmException, IOException, FileNotFoundException {
-        MessageDigest md = MessageDigest.getInstance(ALGORITHM[1]);
+    public static String JavaDigestInputStream(File file, String algorithm) throws NoSuchAlgorithmException, IOException, FileNotFoundException {
+        MessageDigest md = MessageDigest.getInstance(algorithm);
         FileInputStream fis = new FileInputStream(file);
         DigestInputStream dis = new DigestInputStream(fis, md);
 
@@ -54,21 +56,32 @@ public class MessageDigestAndHex {
         return new String(ApacheEncodeHex(md.digest()));
     }
 
-    public static String ApacheDigestUtilsFileChecksum(File file) throws IOException, FileNotFoundException {
+    public static String ApacheDigestUtilsFileChecksum(File file, String algorithm) throws IOException, FileNotFoundException {
         FileInputStream fis = new FileInputStream(file);
-        String md5 = DigestUtils.md5Hex(fis);
-        String sha1 = DigestUtils.sha1Hex(fis);
-        String sha256 = DigestUtils.sha256Hex(fis);
-        String sha384 =	DigestUtils.sha384Hex(fis);
-        String sha512 =	DigestUtils.sha512Hex(fis);
-        System.out.println("md5 : " + md5);
-        System.out.println("sha1 : " + sha1);
-        System.out.println("sha256 : " + sha256);
-        System.out.println("sha384 : " + sha384);
-        System.out.println("sha512 : " + sha512);
+        String returnStr = "";
+        switch(algorithm) {
+            case "MD5":
+                returnStr = DigestUtils.md5Hex(fis);
+            break;
+            case "SHA-1":
+                returnStr = DigestUtils.sha1Hex(fis);
+            break;
+            case "SHA-256":
+                returnStr = DigestUtils.sha256Hex(fis);
+            break;
+            case "SHA-384":
+                returnStr =	DigestUtils.sha384Hex(fis);
+            break;
+            case "SHA-512":
+                returnStr =	DigestUtils.sha512Hex(fis);
+            break;
+            default:
+                System.out.println("no such algorithm");
+            break;
+        }
 
         fis.close();
-        return md5;
+        return returnStr;
     }
 
     public static boolean validateDigest(String msg1, String msg2, String algorithm) throws NoSuchAlgorithmException, UnsupportedEncodingException {
